@@ -57,7 +57,7 @@
     }
 
     // License check
-    const LICENSE_EXPIRY = new Date('2025-05-21'); // Đặt ngày hết hạn ở đây
+    const LICENSE_EXPIRY = new Date('2025-05-22'); // Đặt ngày hết hạn ở đây
 
     function checkLicense() {
       const today = new Date();
