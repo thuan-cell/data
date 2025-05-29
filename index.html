@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Phối Trộn Nhiên Liệu & Chi Phí Sinh Hơi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="TVB-xoa-nen.png">
+
+  <!-- Bỏ cache bằng cách dùng raw.githubusercontent và thêm dấu thời gian -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/thuan-cell/data@main/style2.css?v=20240521">
+
+
+  
+</head>
+<body>
+  <div id="licenseModal" class="license-modal">
+    <div class="license-content">
+      <h2>⚠️ Thông Báo License</h2>
+      <p>Phần mềm đã hết hạn sử dụng. Vui lòng liên hệ nhà cung cấp để gia hạn.</p>
+    </div>
+  </div>
+
+  <div id="loginForm" class="login-form" style="display:none">
+    <h2>🔐 Đăng Nhập</h2>
+    <form onsubmit="return login(event)">
+      <label for="username">Tên đăng nhập:</label>
+      <input type="text" id="username" required placeholder="Nhập tên đăng nhập">
+      
+      <label for="password">Mật khẩu:</label>
+      <input type="password" id="password" required placeholder="Nhập mật khẩu">
+      
+      <button type="submit">Đăng Nhập</button>
+    </form>
+  </div>
+
+  <div id="mainContent" style="display: none;">
+    <header class="header">
+      <img src="https://cdn.jsdelivr.net/gh/thuan-cell/data@main/LOGO%20TVB-xoa%20nen.jpg" alt="Logo" class="logo">
+
+      <h1> Công Cụ Phối Trộn Nhiên Liệu & Chi Phí Sinh Hơi</h1>
+    </header>
+
+    <nav class="nav">
+      <ul class="nav-list" style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+        <li class="nav-item"><a href="#inputForm" onclick="scrollToElement('inputForm')">📊 Máy Tính</a></li>
+        <li class="nav-item"><a href="#resultBox" onclick="scrollToElement('resultBox')">📈 Kết Quả</a></li>
+        <li class="nav-item"><a href="#costChart" onclick="scrollToElement('costChart')">📉 Biểu Đồ</a></li>
+        <li class="nav-item">
+          <a href="https://www.trivietpower.vn/vi/" target="_blank">
+            🏠 Trang Chủ TVP
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" onclick="logout()" class="logout-btn">
+            🚪 Đăng Xuất
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <div class="container">
+        <form id="inputForm" onsubmit="return false;">
+          <div class="column">
+            <div class="fuel-toggle">
+              <input type="checkbox" id="use_trau" checked>
+              <label for="use_trau">Sử dụng Trấu</label>
+            </div>
+            <h3>🌾 Trấu</h3>
+            <label for="gcv_trau">Nhiệt trị GCV (kcal/kg):</label>
+            <input type="number" id="gcv_trau" value="3445" min="0" step="any" />
+            <label for="moisture_trau">Độ ẩm nhiên liệu (%):</label>
+            <input type="number" id="moisture_trau" value="10" min="0" max="100" step="any" />
+            <label for="cost_trau">Đơn giá nhiên liệu (VNĐ/kg):</label>
+            <input type="number" id="cost_trau" value="1500" min="0" step="any" />
+          </div>
+
+          <div class="column">
+            <div class="fuel-toggle">
+              <input type="checkbox" id="use_than" checked>
+              <label for="use_than">Sử dụng Than</label>
+            </div>
+            <h3>⛏️ Than</h3>
+            <label for="gcv_than">Nhiệt trị GCV (kcal/kg):</label>
+            <input type="number" id="gcv_than" value="3500" min="0" step="any" />
+            <label for="moisture_than">Độ ẩm nhiên liệu (%):</label>
+            <input type="number" id="moisture_than" value="37" min="0" max="100" step="any" />
+            <label for="cost_than">Đơn giá nhiên liệu (VNĐ/kg):</label>
+            <input type="number" id="cost_than" value="1250" min="0" step="any" />
+          </div>
+
+          <div class="column">
+            <div class="fuel-toggle">
+              <input type="checkbox" id="use_dam" checked>
+              <label for="use_dam">Sử dụng Dăm</label>
+            </div>
+            <h3>🌲 Dăm</h3>
+            <label for="gcv_dam">Nhiệt trị GCV (kcal/kg):</label>
+            <input type="number" id="gcv_dam" value="2587" min="0" step="any" />
+            <label for="moisture_dam">Độ ẩm nhiên liệu (%):</label>
+            <input type="number" id="moisture_dam" value="45" min="0" max="100" step="any" />
+            <label for="cost_dam">Đơn giá nhiên liệu (VNĐ/kg):</label>
+            <input type="number" id="cost_dam" value="1000" min="0" step="any" />
+          </div>
+        </form>
+
+        <button onclick="autoCalculate()">Tính Toán</button>
+
+        <div id="resultBox" class="result-box" style="display:none;" aria-live="polite" aria-atomic="true">
+          <h3>🖋️ Tính toán lý thuyết:</h3>
+          <div id="resultContent"></div>
+        </div>
+
+        <div class="chart-container">
+          <canvas id="costChart" width="900" height="200" aria-label="Biểu đồ chi phí nhiên liệu theo phối trộn" role="img"></canvas>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <div class="legend-color optimal"></div>
+              <span>Phối trộn tối ưu</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color normal"></div>
+              <span>Các phối trộn khác</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <canvas id="sineChart" width="900" height="200" aria-label="Biểu đồ sin chi phí nhiên liệu" role="img"></canvas>
+        </div>
+      </div>
+    </main>
+	
+  </div>
+
+    <footer class="footer">
+      <p>© 2024 Công Cụ Phối Trộn Nhiên Liệu. Mọi quyền được bảo lưu.</p>
+     
+
+    </footer>
+  </div>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Load JavaScript từ GitHub -->
+<script src="index2.js"></script>
+
+
+
+
+
+</body>
+</html>
